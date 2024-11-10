@@ -1,33 +1,51 @@
-<h1 align="center"><a href="https://gist.github.com/SirTony/5832ad8a2b8fd4acb636" target="_blank">Fallout 4 Save File Format</a></h1>
+<h1 align="center">Fallout 4 Save File Format>/h1>
+
+initial file taken forem [here](https://gist.github.com/SirTony/5832ad8a2b8fd4acb636)
 
 The binary format for Fallout 4 PC save files.
-This document was created by reverse-engineering files from version 1.2.37.0 of the game.
+This document was created by reverse-engineering files from version 1.10.984.0 of the game.
 
 _**Note**: This document is incomplete!_
 
-> [!IMPORTANT]
-> If anyone wonder, with version 1.10.984.0, plugins are divided in two sections. The first one, as described is followed by another plugin2 count (uint32) and wstring[Plugins2 Count] that store mods and creation kit enabled.
-
 ## Table of Contents
 
-- _[Table of Contents](https://gist.github.com/SirTony/5832ad8a2b8fd4acb636#table-of-contents)_
-- _[Format](https://gist.github.com/SirTony/5832ad8a2b8fd4acb636#format)_
-  - _[Header](https://gist.github.com/SirTony/5832ad8a2b8fd4acb636#header)_
-- _[Types](https://gist.github.com/SirTony/5832ad8a2b8fd4acb636#types)_
+- _[Table of Contents](#table-of-contents)_
+- _[Types](#types)_
+- _[Format](#format)_
+  - _[Header](#header)_
+  - _[Statistics](#statistics)_
+
+## Types
+
+| Type Name  | Size (in bytes) | Remarks                                                                                                        |
+| ---------- | :-------------- | -------------------------------------------------------------------------------------------------------------- |
+| `char`     | 1               | An 8-bit character                                                                                             |
+| `wstring`  | Variable        | A `wstring` is a string prefixed with a `uint16` denoting the length, followed by exactly that many characters |
+| `uint8`    | 1               | An unsigned 8-bit integer                                                                                      |
+| `uint16`   | 2               | An unsigned 16-bit integer                                                                                     |
+| `uint32`   | 4               | An unsigned 32-bit integer                                                                                     |
+| `float32`  | 4               | A single-precision, 32-bit, floating-point number                                                              |
+| `FILETIME` | 8               | _**See**: https://msdn.microsoft.com/en-us/library/windows/desktop/ms724284(v=vs.85).aspx_                     |
 
 ## Format
 
-| Field Name       | Type                        | Remarks                                                                                              |
-| ---------------- | --------------------------- | ---------------------------------------------------------------------------------------------------- |
-| Magic ID         | `char[12]`                  | Always `FO4_SAVEGAME`                                                                                |
-| Header Size      | `uint32`                    | The total size (in bytes) of the header                                                              |
-| Header           | `header`                    | _**See**: [Header](#)_                                                                               |
-| Snapshot         | `uint8[Width * Height * 4]` | An array containing raw pixel data for the thumbnail. The array is stored as 32-bits-per-pixel ARGB. |
-| Format Version   | `uint8`                     | The save file format version (?). Current value is 61                                                |
-| Game Version     | `wstring`                   | The game's patch version when the save was created in dot-notation (ex `1.2.37.0`)                   |
-| Plugin Info Size | `uint32`                    | The total size (in bytes) of the plugin information                                                  |
-| Plugins Count    | `uint8`                     | The number of plugins used by this save                                                              |
-| Plugins          | `wstring[Plugins Count]`    | Each string is a file name for a `.esm` or `.esp` file in the `Data` directory.                      |
+| Field Name          | Type                           | Remarks                                                                                              |
+| ------------------- | ------------------------------ | ---------------------------------------------------------------------------------------------------- |
+| Magic ID            | `char[12]`                     | Always `FO4_SAVEGAME`                                                                                |
+| Header Size         | `uint32`                       | The total size (in bytes) of the header                                                              |
+| Header              | `header`                       | See: [Header](#header)                                                                               |
+| Snapshot            | `uint8[Width * Height * 4]`    | An array containing raw pixel data for the thumbnail. The array is stored as 32-bits-per-pixel ARGB. |
+| Format Version      | `uint8`                        | The save file format version (?). Current value is 61                                                |
+| Game Version        | `wstring`                      | The game's patch version when the save was created in dot-notation (ex `1.2.37.0`)                   |
+| Plugin Info Size    | `uint32`                       | The total size (in bytes) of the plugin information                                                  |
+| Plugins Count       | `uint8`                        | The number of plugins used by this save                                                              |
+| Plugins             | `wstring[Plugins Count]`       | Each string is a file name for a `.esm` or `.esp` file in the `Data` directory.                      |
+| Light Plugins Count | `uint8`                        | The number of light plugins used by this save                                                        |
+| Light Plugins       | `wstring[Plugins Count]`       | Each string is a file name for a `.esm` or `.esp` file in the `Data` directory.                      |
+| unknown             | `uint[105]`                    | Note: I have absolutely no Idea what this is.                                                        |
+| Statistic Size      | `uint32`                       |                                                                                                      |
+| Statistic Count     | `uint32`                       |                                                                                                      |
+| Statistic           | `statistics[Statistics Count]` |                                                                                                      |
 
 ### Header
 
@@ -47,14 +65,10 @@ _**Note**: This document is incomplete!_
 | Snapshot Width               | `uint32`   | The width (in pixels) of the save thumbnail                                                                                                                                                                                                            |
 | Snapshot Height              | `uint32`   | The height (in pixels) of the save thumbnail                                                                                                                                                                                                           |
 
-## Types
+### Statistics
 
-| Type Name  | Size (in bytes) | Remarks                                                                                                        |
-| ---------- | :-------------- | -------------------------------------------------------------------------------------------------------------- |
-| `char`     | 1               | An 8-bit character                                                                                             |
-| `wstring`  | Variable        | A `wstring` is a string prefixed with a `uint16` denoting the length, followed by exactly that many characters |
-| `uint8`    | 1               | An unsigned 8-bit integer                                                                                      |
-| `uint16`   | 2               | An unsigned 16-bit integer                                                                                     |
-| `uint32`   | 4               | An unsigned 32-bit integer                                                                                     |
-| `float32`  | 4               | A single-precision, 32-bit, floating-point number                                                              |
-| `FILETIME` | 8               | _**See**: https://msdn.microsoft.com/en-us/library/windows/desktop/ms724284(v=vs.85).aspx_                     |
+| Field Name | Type      | Remarks |
+| ---------- | --------- | ------- |
+| Name       | `wstring` |         |
+| Type       | `uint8`   |         |
+| Number     | `uint32`  |         |
