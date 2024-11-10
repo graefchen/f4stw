@@ -3,7 +3,6 @@ package save
 import (
 	"bytes"
 	"encoding/binary"
-	"fmt"
 	"image"
 	"os"
 	"strings"
@@ -70,7 +69,6 @@ func ReadF4Save(filename string) (F4Save, error) {
 	var sz uint16
 	binary.Read(reader, binary.BigEndian, &mid)
 	binary.Read(reader, binary.LittleEndian, &u32)
-	fmt.Println(u32)
 	binary.Read(reader, binary.LittleEndian, &save.engineVersion)
 	binary.Read(reader, binary.LittleEndian, &save.saveNumber)
 
@@ -151,13 +149,10 @@ func ReadF4Save(filename string) (F4Save, error) {
 	// unknown := make([]byte, 109)
 	unknown := make([]byte, 105)
 	binary.Read(reader, binary.LittleEndian, &unknown)
-
 	binary.Read(reader, binary.LittleEndian, &u32)
-	// fmt.Println(u32)
 
 	var dataSize uint32
 	binary.Read(reader, binary.LittleEndian, &dataSize)
-	// fmt.Println(dataSize)
 	save.statistic = make([]Statistic, dataSize)
 
 	for i := 0; i < int(dataSize); i++ {
