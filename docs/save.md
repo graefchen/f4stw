@@ -1,6 +1,6 @@
-<h1 align="center">Fallout 4 Save File Format>/h1>
+<h1 align="center">Fallout 4 Save File Format</h1>
 
-initial file taken forem [here](https://gist.github.com/SirTony/5832ad8a2b8fd4acb636)
+initial file taken from [here](https://gist.github.com/SirTony/5832ad8a2b8fd4acb636)
 
 The binary format for Fallout 4 PC save files.
 This document was created by reverse-engineering files from version 1.10.984.0 of the game.
