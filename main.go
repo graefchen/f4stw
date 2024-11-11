@@ -7,7 +7,7 @@ import (
 
 func main() {
 	// save.ReadF4Save("F4Save_long.fos")
-	save, err := save.ReadF4Save("F4Save.fos")
+	save, err := save.ReadF4Save("F4Save_long.fos")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -37,4 +37,5 @@ func main() {
 	fmt.Println("Game Version: ", save.GetGameVersion())
 	// fmt.Println(save.GetPlugins())
 	// fmt.Println(save.GetPlugins2())
+	// fmt.Println(save.GetStatisatics())
 }

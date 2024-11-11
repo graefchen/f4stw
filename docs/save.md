@@ -42,10 +42,11 @@ _**Note**: This document is incomplete!_
 | Plugins             | `wstring[Plugins Count]`       | Each string is a file name for a `.esm` or `.esp` file in the `Data` directory.                      |
 | Light Plugins Count | `uint8`                        | The number of light plugins used by this save                                                        |
 | Light Plugins       | `wstring[Plugins Count]`       | Each string is a file name for a `.esm` or `.esp` file in the `Data` directory.                      |
-| unknown             | `uint[105]`                    | Note: I have absolutely no Idea what this is.                                                        |
+| unknown             | `uint8[105]`                   | Note: I have absolutely no Idea what this is.                                                        |
 | Statistic Size      | `uint32`                       |                                                                                                      |
 | Statistic Count     | `uint32`                       |                                                                                                      |
 | Statistic           | `statistics[Statistics Count]` |                                                                                                      |
+| unknown             |                                | Note: Further Research required!                                                                     |
 
 ### Header
 
@@ -67,8 +68,8 @@ _**Note**: This document is incomplete!_
 
 ### Statistics
 
-| Field Name | Type      | Remarks |
-| ---------- | --------- | ------- |
-| Name       | `wstring` |         |
-| Type       | `uint8`   |         |
-| Number     | `uint32`  |         |
+| Field Name   | Type      | Remarks |
+| ------------ | --------- | ------- |
+| Name         | `wstring` |         |
+| type/buffer? | `uint8`   |         |
+| Number       | `uint32`  |         |

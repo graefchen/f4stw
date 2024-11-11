@@ -3,6 +3,7 @@ package save
 import (
 	"bytes"
 	"encoding/binary"
+	"fmt"
 	"image"
 	"os"
 	"strings"
@@ -11,7 +12,7 @@ import (
 
 type Statistic struct {
 	name string
-	t    byte
+	t    uint8
 	n    uint32
 }
 
@@ -65,7 +66,6 @@ func ReadF4Save(filename string) (F4Save, error) {
 	reader := bytes.NewReader(bytecode)
 	mid := make([]byte, 12)
 	var u32 uint32
-	var b byte
 	var sz uint16
 	binary.Read(reader, binary.BigEndian, &mid)
 	binary.Read(reader, binary.LittleEndian, &u32)
@@ -147,25 +147,44 @@ func ReadF4Save(filename string) (F4Save, error) {
 	// after that follwoing are the stats
 	// unknown := make([]byte, 113)
 	// unknown := make([]byte, 109)
-	unknown := make([]byte, 105)
+	// possible 10 uint32 important data type, probably no offsets
+	// unknown := make([]byte, 105)
+	// fmt.Println(reader)
+	for i := 0; i < 10; i++ {
+		binary.Read(reader, binary.LittleEndian, &u32)
+		// fmt.Println(i, ":", u32)
+	}
+	unknown := make([]byte, 105-40)
 	binary.Read(reader, binary.LittleEndian, &unknown)
+	// the  size of the statistic block
 	binary.Read(reader, binary.LittleEndian, &u32)
+	// fmt.Println(u32)
 
 	var dataSize uint32
 	binary.Read(reader, binary.LittleEndian, &dataSize)
 	save.statistic = make([]Statistic, dataSize)
 
 	for i := 0; i < int(dataSize); i++ {
+		var statType byte
+		var number uint32
 		binary.Read(reader, binary.LittleEndian, &sz)
 		name := make([]byte, sz)
 		binary.Read(reader, binary.LittleEndian, &name)
 		// Possible way to describe data?
-		binary.Read(reader, binary.LittleEndian, b)
-		var n uint32
-		binary.Read(reader, binary.LittleEndian, &n)
-		save.statistic[i] = Statistic{string(name), b, n}
+		binary.Read(reader, binary.LittleEndian, &statType)
+		binary.Read(reader, binary.LittleEndian, &number)
+		save.statistic[i] = Statistic{string(name), statType, number}
 	}
-	// fmt.Println(reader)
+	fmt.Println(reader)
+
+	binary.Read(reader, binary.LittleEndian, &u32)
+	fmt.Println(u32)
+	binary.Read(reader, binary.LittleEndian, &u32)
+	fmt.Println(u32)
+	number := u32
+	for i := 0; i < int(number); i++ {
+		binary.Read(reader, binary.LittleEndian, &u32)
+	}
 
 	return save, nil
 }
@@ -236,4 +255,8 @@ func (s F4Save) GetPlugins() []string {
 
 func (s F4Save) GetPlugins2() []string {
 	return s.plugins2
+}
+
+func (s F4Save) GetStatisatics() []Statistic {
+	return s.statistic
 }
