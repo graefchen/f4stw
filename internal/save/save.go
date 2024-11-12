@@ -10,12 +10,6 @@ import (
 	"syscall"
 )
 
-type Statistic struct {
-	name string
-	t    uint8
-	n    uint32
-}
-
 type F4Save struct {
 	// internel fields
 	fileName string
@@ -38,8 +32,7 @@ type F4Save struct {
 	plugins                    []string
 	plugins2                   []string
 
-	// Following Stats(?)
-	statistic []Statistic
+	// Following Stuff
 }
 
 // Checks if the given file of filename is a Fallout 4 savefile
@@ -66,6 +59,7 @@ func ReadF4Save(filename string) (F4Save, error) {
 	reader := bytes.NewReader(bytecode)
 	mid := make([]byte, 12)
 	var u32 uint32
+	// var i32 int32
 	var sz uint16
 	binary.Read(reader, binary.BigEndian, &mid)
 	binary.Read(reader, binary.LittleEndian, &u32)
@@ -131,60 +125,152 @@ func ReadF4Save(filename string) (F4Save, error) {
 		save.plugins[i] = string(plugin)
 	}
 
-	binary.Read(reader, binary.LittleEndian, &pluginCount)
-	save.plugins2 = make([]string, pluginCount)
-	for i := 0; i < int(pluginCount); i++ {
+	var lightPluginCount uint16
+	binary.Read(reader, binary.LittleEndian, &lightPluginCount)
+	save.plugins2 = make([]string, lightPluginCount)
+	for i := 0; i < int(lightPluginCount); i++ {
 		binary.Read(reader, binary.LittleEndian, &sz)
 		plugin := make([]byte, sz)
 		binary.Read(reader, binary.LittleEndian, &plugin)
 		save.plugins2[i] = string(plugin)
 	}
 
-	// TODO: Reverse engineer the whole rest of the file (possible skyrim?)
 	// fmt.Println(reader)
 
-	// Unkown ... some data garbage? (last 8 byte might be interesting)
-	// after that follwoing are the stats
-	// unknown := make([]byte, 113)
-	// unknown := make([]byte, 109)
-	// possible 10 uint32 important data type, probably no offsets
-	// unknown := make([]byte, 105)
+	// File location Table
+	var globalDataTable3Offset, globalDataTable1Count, globalDataTable2Count, globalDataTable3Count, changeFormCount uint32
+	binary.Read(reader, binary.LittleEndian, &u32)
+	fmt.Println("formIDArrayCountOffset:", u32)
+	binary.Read(reader, binary.LittleEndian, &u32)
+	fmt.Println("unknownTable3Offset:", u32)
+	binary.Read(reader, binary.LittleEndian, &u32)
+	fmt.Println("globalDataTable1Offset:", u32)
+	binary.Read(reader, binary.LittleEndian, &u32)
+	fmt.Println("globalDataTable2Offset:", u32)
+	binary.Read(reader, binary.LittleEndian, &u32)
+	fmt.Println("changeFormsOffset:", u32)
+	binary.Read(reader, binary.LittleEndian, &globalDataTable3Offset)
+	fmt.Println("globalDataTable3Offset:", globalDataTable3Offset)
+	binary.Read(reader, binary.LittleEndian, &globalDataTable1Count)
+	fmt.Println("globalDataTable1Count:", globalDataTable1Count)
+	binary.Read(reader, binary.LittleEndian, &globalDataTable2Count)
+	fmt.Println("globalDataTable2Count:", globalDataTable2Count)
+	binary.Read(reader, binary.LittleEndian, &globalDataTable3Count)
+	fmt.Println("globalDataTable3Count:", globalDataTable3Count)
+	binary.Read(reader, binary.LittleEndian, &changeFormCount)
+	fmt.Println("changeFormCount:", changeFormCount)
+
+	unused := make([]uint32, 15)
+	binary.Read(reader, binary.LittleEndian, &unused)
+
+	// Misc Stats
+	for i := 0; i < int(globalDataTable1Count); i++ {
+		fmt.Printf("=== Global Data Table 1[%d] ===\n", i)
+		binary.Read(reader, binary.LittleEndian, &u32)
+		fmt.Println("type:", u32)
+		var length uint32
+		binary.Read(reader, binary.LittleEndian, &length)
+		fmt.Println("length:", length)
+		u := make([]uint8, length)
+		binary.Read(reader, binary.LittleEndian, u)
+	}
+
+	for i := 0; i < int(globalDataTable2Count); i++ {
+		fmt.Printf("=== Global Data Table 2[%d] ===\n", i)
+		binary.Read(reader, binary.LittleEndian, &u32)
+		fmt.Println("type:", u32)
+		var length uint32
+		binary.Read(reader, binary.LittleEndian, &length)
+		fmt.Println("length:", length)
+		u := make([]uint8, length)
+		binary.Read(reader, binary.LittleEndian, u)
+	}
+
+	// Change Form ...
+
+	// fmt.Println("globalDataTable3Offset:", globalDataTable3Offset)
+	reader = bytes.NewReader(bytecode[globalDataTable3Offset:])
+	for i := 0; i < int(globalDataTable3Count); i++ {
+		fmt.Printf("=== Global Data Table 3[%d] ===\n", i)
+		binary.Read(reader, binary.LittleEndian, &u32)
+		fmt.Println("type:", u32)
+		var length uint32
+		binary.Read(reader, binary.LittleEndian, &length)
+		fmt.Println("length:", length)
+		u := make([]uint8, length)
+		binary.Read(reader, binary.LittleEndian, u)
+	}
+
+	// Old...
+	// var count uint32
+	// binary.Read(reader, binary.LittleEndian, &count)
+	// // fmt.Println("count:", count)
+	// save.plugins2 = make([]string, count)
+	// for i := 0; i < int(count); i++ {
+	// 	var category uint8
+	// 	binary.Read(reader, binary.LittleEndian, &sz)
+	// 	str := make([]byte, sz)
+	// 	binary.Read(reader, binary.LittleEndian, &str)
+	// 	// fmt.Println("name:", string(str))
+	// 	binary.Read(reader, binary.LittleEndian, &category)
+	// 	// fmt.Println("categoty:", category)
+	// 	binary.Read(reader, binary.LittleEndian, &u32)
+	// 	// fmt.Println("value:", u32)
+	// }
+
+	// // Player Location
+
+	// fmt.Println("=== Global Data Table 1[1] ===")
+	// binary.Read(reader, binary.LittleEndian, &u32)
+	// fmt.Println("type:", u32)
+	// binary.Read(reader, binary.LittleEndian, &u32)
+	// fmt.Println("length:", u32)
+
+	// binary.Read(reader, binary.LittleEndian, &u32)
+	// // fmt.Println("nextObjectid:", u32)
+	// var u8 uint8
+	// // fmt.Print("worldSpace1: ")
+	// binary.Read(reader, binary.LittleEndian, &u8)
+	// // fmt.Print(u8)
+	// binary.Read(reader, binary.LittleEndian, &u8)
+	// // fmt.Print(u8)
+	// binary.Read(reader, binary.LittleEndian, &u8)
+	// // fmt.Print(u8, "\n")
+	// binary.Read(reader, binary.LittleEndian, &i32)
+	// // fmt.Println("coorX:", i32)
+	// binary.Read(reader, binary.LittleEndian, &i32)
+	// // fmt.Println("coorY:", i32)
+	// // fmt.Print("worldSpace2: ")
+	// binary.Read(reader, binary.LittleEndian, &u8)
+	// // fmt.Print(u8)
+	// binary.Read(reader, binary.LittleEndian, &u8)
+	// // fmt.Print(u8)
+	// binary.Read(reader, binary.LittleEndian, &u8)
+	// // fmt.Print(u8, "\n")
+	// var f32 float32
+	// binary.Read(reader, binary.LittleEndian, &f32)
+	// // fmt.Println("posX:", f32)
+	// binary.Read(reader, binary.LittleEndian, &f32)
+	// // fmt.Println("posY:", f32)
+	// binary.Read(reader, binary.LittleEndian, &f32)
+	// // fmt.Println("posZ:", f32)
+
+	// // TES(?)
+	// fmt.Println("=== Global Data Table 1[2] ===")
+	// binary.Read(reader, binary.LittleEndian, &u32)
+	// fmt.Println("type:", u32)
+	// binary.Read(reader, binary.LittleEndian, &u32)
+	// fmt.Println("length:", u32)
+
+	// binary.Read(reader, binary.LittleEndian, &u8)
+	// vsval := u8
+	// fmt.Println("vsval?:", vsval&3)
+	// fmt.Println("vsval is uint8?:", vsval <= 0x40)
+	// binary.Read(reader, binary.LittleEndian, &u8)
+	// u16vsval := (uint16(vsval) | (uint16(u8) << 8)) >> 2
+	// fmt.Println("vsval is uint16?:", u16vsval <= 0x4000)
+
 	// fmt.Println(reader)
-	for i := 0; i < 10; i++ {
-		binary.Read(reader, binary.LittleEndian, &u32)
-		// fmt.Println(i, ":", u32)
-	}
-	unknown := make([]byte, 105-40)
-	binary.Read(reader, binary.LittleEndian, &unknown)
-	// the  size of the statistic block
-	binary.Read(reader, binary.LittleEndian, &u32)
-	// fmt.Println(u32)
-
-	var dataSize uint32
-	binary.Read(reader, binary.LittleEndian, &dataSize)
-	save.statistic = make([]Statistic, dataSize)
-
-	for i := 0; i < int(dataSize); i++ {
-		var statType byte
-		var number uint32
-		binary.Read(reader, binary.LittleEndian, &sz)
-		name := make([]byte, sz)
-		binary.Read(reader, binary.LittleEndian, &name)
-		// Possible way to describe data?
-		binary.Read(reader, binary.LittleEndian, &statType)
-		binary.Read(reader, binary.LittleEndian, &number)
-		save.statistic[i] = Statistic{string(name), statType, number}
-	}
-	fmt.Println(reader)
-
-	binary.Read(reader, binary.LittleEndian, &u32)
-	fmt.Println(u32)
-	binary.Read(reader, binary.LittleEndian, &u32)
-	fmt.Println(u32)
-	number := u32
-	for i := 0; i < int(number); i++ {
-		binary.Read(reader, binary.LittleEndian, &u32)
-	}
 
 	return save, nil
 }
@@ -255,8 +341,4 @@ func (s F4Save) GetPlugins() []string {
 
 func (s F4Save) GetPlugins2() []string {
 	return s.plugins2
-}
-
-func (s F4Save) GetStatisatics() []Statistic {
-	return s.statistic
 }

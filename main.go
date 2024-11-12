@@ -37,5 +37,4 @@ func main() {
 	fmt.Println("Game Version: ", save.GetGameVersion())
 	// fmt.Println(save.GetPlugins())
 	// fmt.Println(save.GetPlugins2())
-	// fmt.Println(save.GetStatisatics())
 }

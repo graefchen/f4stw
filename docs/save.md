@@ -40,7 +40,7 @@ _**Note**: This document is incomplete!_
 | Plugin Info Size    | `uint32`                       | The total size (in bytes) of the plugin information                                                  |
 | Plugins Count       | `uint8`                        | The number of plugins used by this save                                                              |
 | Plugins             | `wstring[Plugins Count]`       | Each string is a file name for a `.esm` or `.esp` file in the `Data` directory.                      |
-| Light Plugins Count | `uint8`                        | The number of light plugins used by this save                                                        |
+| Light Plugins Count | `uint16`                       | The number of light plugins used by this save                                                        |
 | Light Plugins       | `wstring[Plugins Count]`       | Each string is a file name for a `.esm` or `.esp` file in the `Data` directory.                      |
 | unknown             | `uint8[105]`                   | Note: I have absolutely no Idea what this is.                                                        |
 | Statistic Size      | `uint32`                       |                                                                                                      |

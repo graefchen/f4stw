@@ -53,6 +53,24 @@ hexyl F4Save_long.fos --border none --color never | save -f bytecode.txt
 hexyl F4Save_long.fos -s 985567 --border none --color never | save -f bytecode.txt
 ```
 
+#### Numbers:
+
+6,7 and 8 seem to be very similar to other saves (What is it?)
+
+- 0 : 3793111808
+- 1 : 3806273280
+- 2 : 251741696
+- 3 : 320479744
+- 4 : 334418944
+- 5 : 2519986944
+- 6 : 3072
+- 7 : 3584
+- 8 : 2048
+- 9 : 19854592
+
 Starting at line 61583....
 
 985567 is the last index that I know will bring us further
+
+Use [FallrimTools](https://github.com/mdfairch/FallrimTools) for help,
+also dig through the sourcode to find out how it does stuff.
