@@ -1,10 +1,10 @@
-<h1 align="center">Fallout 4 Save File Format</h1>
+<h1 align="center">Fallout 4 Save File Format »<i>FOS</i>«</h1>
 
-initial file taken from [here](https://gist.github.com/SirTony/5832ad8a2b8fd4acb636)
-and added with information from [here](https://en.uesp.net/wiki/Skyrim_Mod:Save_File_Format)
+initial file taken from
+[here](https://gist.github.com/SirTony/5832ad8a2b8fd4acb636) and added with
+information from [here](https://en.uesp.net/wiki/Skyrim_Mod:Save_File_Format)
 
 The binary format for Fallout 4 PC save files.
-This document was created by reverse-engineering files from version 1.10.984.0 of the game.
 
 _**Note**: This document is incomplete!_
 
@@ -45,11 +45,12 @@ _**Note**: This document is incomplete!_
 | Plugins             | `wstring[Plugins Count]`                                | Each string is a file name for a `.esm` or `.esp` file in the `Data` directory.                      |
 | Light Plugins Count | `uint16`                                                | The number of light plugins used by this save                                                        |
 | Light Plugins       | `wstring[Plugins Count]`                                | Each string is a file name for a `.esm` or `.esp` file in the `Data` directory.                      |
-| File Location Table | `File Location Table`                                   |                                                                                                      |
-| Global Date Table 1 | `Global Data [fileLocationTable.globalDataTable1Count]` |                                                                                                      |
-| Global Date Table 2 | `Global Data [fileLocationTable.globalDataTable2Count]` |                                                                                                      |
+| File Location Table | `File Location Table`                                   | See: [File Lccation Table](#file-location-table)                                                     |
+| Global Date Table 1 | `Global Data [fileLocationTable.globalDataTable1Count]` | See: [Global Data Table](#global-data)                                                               |
+| Global Date Table 2 | `Global Data [fileLocationTable.globalDataTable2Count]` | See: [Global Data Table](#global-data)                                                               |
 | ???                 | `???`                                                   |                                                                                                      |
-| Global Date Table 3 | `Global Data [fileLocationTable.globalDataTable2Count]` |                                                                                                      |
+| Global Date Table 3 | `Global Data [fileLocationTable.globalDataTable2Count]` | See: [Global Data Table](#global-data)                                                               |
+| ???                 | `???`                                                   |                                                                                                      |
 
 ### Header
 
@@ -71,69 +72,78 @@ _**Note**: This document is incomplete!_
 
 ### File Location Table
 
-| Field Name                 | Type         | Remarks |
-| -------------------------- | ------------ | ------- |
-| Form ID Array Count Offset | `uint32`     |         |
-| Unknown Table 3 Offset     | `uint32`     |         |
-| Global Data Table 1 Offset | `uint32`     |         |
-| Global Data Table 2 Offset | `uint32`     |         |
-| Change Form Offset         | `uint32`     |         |
-| Global Data Table 3 Offset | `uint32`     |         |
-| Global Date Table 1 Count  | `uint32`     |         |
-| Global Date Table 2 Count  | `uint32`     |         |
-| Global Date Table 3 Count  | `uint32`     |         |
-| Change Form Count          | `uint32`     |         |
-| Unused                     | `uint32[15]` |         |
+| Field Name                 | Type         | Remarks                               |
+| -------------------------- | ------------ | ------------------------------------- |
+| Form ID Array Count Offset | `uint32`     | Absolut offset of the Form ID Array   |
+| Unknown Table 3 Offset     | `uint32`     | Absolut offset of the Unknown Table 3 |
+| Global Data Table 1 Offset | `uint32`     | Absolut offset of Global Table 1      |
+| Global Data Table 2 Offset | `uint32`     | Absolut offset of Global Table 2      |
+| Change Form Offset         | `uint32`     | Absolut offset of Change form         |
+| Global Data Table 3 Offset | `uint32`     | Absolut offset of Global Data Table 3 |
+| Global Date Table 1 Count  | `uint32`     | The size of the Global Table 1        |
+| Global Date Table 2 Count  | `uint32`     | The size of the Global Table 2        |
+| Global Date Table 3 Count  | `uint32`     | The size of the Global Table 3        |
+| Change Form Count          | `uint32`     | The size of the Chang                 |
+| Unused                     | `uint32[15]` | Unused Data                           |
 
 ### Global Data
 
 | Field Name | Type            | Remarks                                      |
 | ---------- | --------------- | -------------------------------------------- |
-| type       | `uint32`        |                                              |
-| lenght     | `uint32`        |                                              |
+| type       | `uint32`        | The Type of the Global Data Table            |
+| lenght     | `uint32`        | The lenght of the Global Data Table          |
 | data       | `uint8[lenght]` | Format of Data depends on type (noted below) |
+
+**Category's:**
 
 | Number | Type                      |
 | ------ | ------------------------- |
 | 0      | [Misc Stats](#misc-stats) |
-| 1      |                           |
-| 2      |                           |
-| 3      |                           |
-| 4      |                           |
-| 5      |                           |
-| 6      |                           |
-| 7      |                           |
-| 8      |                           |
-| 9      |                           |
-| 10     |                           |
-| 11     |                           |
-| 100    |                           |
-| 101    |                           |
-| 102    |                           |
-| 103    |                           |
-| 105    |                           |
-| 106    |                           |
-| 109    |                           |
-| 110    |                           |
-| 111    |                           |
-| 113    |                           |
-| 114    |                           |
-| 115    |                           |
-| 116    |                           |
-| 117    |                           |
-| 1000   |                           |
-| 1001   |                           |
-| 1002   |                           |
-| 1003   |                           |
-| 1004   |                           |
-| 1005   |                           |
-| 1006   |                           |
-| 1007   |                           |
+| 1      | ?                         |
+| 2      | ?                         |
+| 3      | ?                         |
+| 4      | ?                         |
+| 5      | ?                         |
+| 6      | ?                         |
+| 7      | ?                         |
+| 8      | ?                         |
+| 9      | ?                         |
+| 10     | ?                         |
+| 11     | ?                         |
+| 100    | ?                         |
+| 101    | ?                         |
+| 102    | ?                         |
+| 103    | ?                         |
+| 105    | ?                         |
+| 106    | ?                         |
+| 109    | ?                         |
+| 110    | ?                         |
+| 111    | ?                         |
+| 113    | ?                         |
+| 114    | ?                         |
+| 115    | ?                         |
+| 116    | ?                         |
+| 117    | ?                         |
+| 1000   | ?                         |
+| 1001   | ?                         |
+| 1002   | ?                         |
+| 1003   | ?                         |
+| 1004   | ?                         |
+| 1005   | ?                         |
+| 1006   | ?                         |
+| 1007   | ?                         |
 
 #### Misc-Stats
 
-| Field Name   | Type      | Remarks |
-| ------------ | --------- | ------- |
-| Name         | `wstring` |         |
-| type/buffer? | `uint8`   |         |
-| Number       | `uint32`  |         |
+| Field Name | Type      | Remarks                              |
+| ---------- | --------- | ------------------------------------ |
+| Name       | `wstring` |                                      |
+| Category   | `uint8`   | Number of the Category (noted below) |
+| Value      | `uint32`  |                                      |
+
+**Category's:**
+
+| Number | Type |
+| ------ | ---- |
+| 0      | ?    |
+| 7      | ?    |
