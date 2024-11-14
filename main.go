@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
-	"main/internal/save"
+	"main/internal/fos"
 )
 
 func main() {
 	// save.ReadF4Save("F4Save_long.fos")
-	save, err := save.ReadF4Save("F4Save_long.fos")
+	save, err := fos.ReadFOS("F4Save_long.fos")
 	if err != nil {
 		fmt.Println(err)
 	}

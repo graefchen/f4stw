@@ -1,4 +1,4 @@
-package save
+package fos
 
 import (
 	"bytes"
@@ -10,7 +10,7 @@ import (
 	"syscall"
 )
 
-type F4Save struct {
+type FOS struct {
 	// internel fields
 	fileName string
 
@@ -36,7 +36,7 @@ type F4Save struct {
 }
 
 // Checks if the given file of filename is a Fallout 4 savefile
-func IsF4Save(filename string) (bool, error) {
+func IsFOS(filename string) (bool, error) {
 	bytecode, err := os.ReadFile(filename)
 	if err != nil {
 		return false, err
@@ -50,11 +50,11 @@ func IsF4Save(filename string) (bool, error) {
 	return false, nil
 }
 
-func ReadF4Save(filename string) (F4Save, error) {
-	save := F4Save{fileName: filename}
+func ReadFOS(filename string) (FOS, error) {
+	save := FOS{fileName: filename}
 	bytecode, err := os.ReadFile(filename)
 	if err != nil {
-		return F4Save{}, err
+		return FOS{}, err
 	}
 	reader := bytes.NewReader(bytecode)
 	mid := make([]byte, 12)
@@ -275,70 +275,70 @@ func ReadF4Save(filename string) (F4Save, error) {
 	return save, nil
 }
 
-func (s F4Save) GetFileName() string {
+func (s FOS) GetFileName() string {
 	return s.fileName
 }
 
-func (s F4Save) GetEngineVersion() uint32 {
+func (s FOS) GetEngineVersion() uint32 {
 	return s.engineVersion
 }
 
-func (s F4Save) GetSaveNumber() uint32 {
+func (s FOS) GetSaveNumber() uint32 {
 	return s.saveNumber
 }
 
-func (s F4Save) GetCharacterName() string {
+func (s FOS) GetCharacterName() string {
 	return s.characterName
 }
 
-func (s F4Save) GetCharacterLevel() uint32 {
+func (s FOS) GetCharacterLevel() uint32 {
 	return s.characterLevel
 }
 
-func (s F4Save) GetCharacterLocation() string {
+func (s FOS) GetCharacterLocation() string {
 	return s.characterLocation
 }
 
-func (s F4Save) GetPlaytime() string {
+func (s FOS) GetPlaytime() string {
 	return s.playtime
 }
 
-func (s F4Save) GetCharacterRace() string {
+func (s FOS) GetCharacterRace() string {
 	return s.characterRace
 }
 
-func (s F4Save) GetCharacterSex() uint16 {
+func (s FOS) GetCharacterSex() uint16 {
 	return s.characterSex
 }
 
-func (s F4Save) GetCurrentCharacterExperience() float32 {
+func (s FOS) GetCurrentCharacterExperience() float32 {
 	return s.currentCharacterExperience
 }
 
-func (s F4Save) GetRequiredExperience() float32 {
+func (s FOS) GetRequiredExperience() float32 {
 	return s.requiredExperience
 }
 
-func (s F4Save) GetFileTime() syscall.Filetime {
+func (s FOS) GetFileTime() syscall.Filetime {
 	return s.fileTime
 }
 
-func (s F4Save) GetSnapshot() *image.RGBA {
+func (s FOS) GetSnapshot() *image.RGBA {
 	return s.snapshot
 }
 
-func (s F4Save) GetFormatVersion() uint8 {
+func (s FOS) GetFormatVersion() uint8 {
 	return s.formatVersion
 }
 
-func (s F4Save) GetGameVersion() string {
+func (s FOS) GetGameVersion() string {
 	return s.gameVersion
 }
 
-func (s F4Save) GetPlugins() []string {
+func (s FOS) GetPlugins() []string {
 	return s.plugins
 }
 
-func (s F4Save) GetPlugins2() []string {
+func (s FOS) GetPlugins2() []string {
 	return s.plugins2
 }
