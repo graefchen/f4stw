@@ -38,3 +38,11 @@ hexyl F4Save_long.fos -s 985567 --border none --color never | save -f bytecode.t
 
 Use [FallrimTools](https://github.com/mdfairch/FallrimTools) for help,
 also dig through the sourcode to find out how it does stuff.
+
+# Note:
+
+https://gamedev.stackexchange.com/a/141770
+
+ACHR records in the change forms is the player inventory ... I believe
+
+ACHR -> CHANGE_REFR_INVENTORY

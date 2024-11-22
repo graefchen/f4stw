@@ -30,6 +30,14 @@ _**Note**: This document is incomplete!_
 | `float32`  | 4               | A single-precision, 32-bit, floating-point number                                                              |
 | `FILETIME` | 8               | _**See**: https://msdn.microsoft.com/en-us/library/windows/desktop/ms724284(v=vs.85).aspx_                     |
 
+### Ref ID
+
+| Name  | Type  | Remarks                                          |
+| ----- | :---- | ------------------------------------------------ |
+| byte0 | uint8 | Upper two bits represent the type of the Form ID |
+| byte1 | uint8 |                                                  |
+| byte2 | uint8 |                                                  |
+
 ## Format
 
 | Field Name          | Type                                                    | Remarks                                                                                              |
@@ -48,8 +56,8 @@ _**Note**: This document is incomplete!_
 | File Location Table | `File Location Table`                                   | See: [File Lccation Table](#file-location-table)                                                     |
 | Global Date Table 1 | `Global Data [fileLocationTable.globalDataTable1Count]` | See: [Global Data Table](#global-data)                                                               |
 | Global Date Table 2 | `Global Data [fileLocationTable.globalDataTable2Count]` | See: [Global Data Table](#global-data)                                                               |
-| ???                 | `???`                                                   |                                                                                                      |
-| Global Date Table 3 | `Global Data [fileLocationTable.globalDataTable2Count]` | See: [Global Data Table](#global-data)                                                               |
+| Change Form         | `Change Form [fileLocationTable.changeFormCount]`       | See: [Change Forms](#change-forms)                                                                   |
+| Global Date Table 3 | `Global Data [fileLocationTable.globalDataTable3Count]` | See: [Global Data Table](#global-data)                                                               |
 | ???                 | `???`                                                   |                                                                                                      |
 
 ### Header
@@ -90,9 +98,9 @@ _**Note**: This document is incomplete!_
 
 | Field Name | Type            | Remarks                                      |
 | ---------- | --------------- | -------------------------------------------- |
-| type       | `uint32`        | The Type of the Global Data Table            |
-| lenght     | `uint32`        | The lenght of the Global Data Table          |
-| data       | `uint8[lenght]` | Format of Data depends on type (noted below) |
+| Type       | `uint32`        | The Type of the Global Data Table            |
+| Lenght     | `uint32`        | The lenght of the Global Data Table          |
+| Data       | `uint8[lenght]` | Format of Data depends on type (noted below) |
 
 **Category's:**
 
@@ -147,3 +155,14 @@ _**Note**: This document is incomplete!_
 | ------ | ---- |
 | 0      | ?    |
 | 7      | ?    |
+
+### Change Forms
+
+| name         | Type            | Info |
+| ------------ | --------------- | ---- |
+| Form ID      | Ref ID          |      |
+| Change Flags | uint32          |      |
+| Version      | uint8           |      |
+| Length1      | depends         |      |
+| Length2      | depends         |      |
+| Data         | uint8[Lenght 1] |      |
