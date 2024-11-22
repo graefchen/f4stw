@@ -158,11 +158,10 @@ _**Note**: This document is incomplete!_
 
 ### Change Forms
 
-| name         | Type            | Info |
-| ------------ | --------------- | ---- |
-| Form ID      | Ref ID          |      |
-| Change Flags | uint32          |      |
-| Version      | uint8           |      |
-| Length1      | depends         |      |
-| Length2      | depends         |      |
-| Data         | uint8[Lenght 1] |      |
+| name         | Type                   | Info |
+| ------------ | ---------------------- | ---- |
+| Form ID      | Ref ID                 |      |
+| Change Flags | uint32                 |      |
+| Version      | uint8                  |      |
+| Length       | depend on Change Flags |      |
+| Data         | uint8[Lenght]          |      |
