@@ -3,6 +3,7 @@ package fos
 import (
 	"bytes"
 	"encoding/binary"
+	"errors"
 	"fmt"
 	"image"
 	"os"
@@ -42,12 +43,13 @@ func IsFOS(filename string) (bool, error) {
 		return false, err
 	}
 
-	// cheking if the magicid is the correct magicid of "FO4_SAVEGAME"
-	if strings.Compare(string(bytecode[0:11]), "FO4_SAVEGAME") != 0 {
-		return true, nil
-	}
+	return checkIsFOS(bytecode[0:11]), nil
+}
 
-	return false, nil
+// Checks if the given file of filename is a Fallout 4 savefile
+func checkIsFOS(magic_number []byte) bool {
+	// checking if the magicid is the correct magicid of "FO4_SAVEGAME"
+	return strings.Compare(string(magic_number), "FO4_SAVEGAME") != 0
 }
 
 func ReadFOS(filename string) (FOS, error) {
@@ -62,6 +64,13 @@ func ReadFOS(filename string) (FOS, error) {
 	// var i32 int32
 	var sz uint16
 	binary.Read(reader, binary.BigEndian, &mid)
+	isFos := checkIsFOS(make([]byte, 12))
+
+	// checking if a file is a Fallout 4 Save file and quit
+	if !isFos {
+		return save, errors.New("not a FOS file")
+	}
+
 	binary.Read(reader, binary.LittleEndian, &u32)
 	binary.Read(reader, binary.LittleEndian, &save.engineVersion)
 	binary.Read(reader, binary.LittleEndian, &save.saveNumber)

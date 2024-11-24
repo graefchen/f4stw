@@ -151,10 +151,15 @@ _**Note**: This document is incomplete!_
 
 **Category's:**
 
-| Number | Type |
-| ------ | ---- |
-| 0      | ?    |
-| 7      | ?    |
+| Number | Type          |
+| ------ | ------------- |
+| 0      | General       |
+| 1      | Quest         |
+| 2      | Combat        |
+| 3      | Crafting      |
+| 4      | Crime         |
+| 5      | Settlement(?) |
+| 7      | Misc          |
 
 ### Change Forms
 
